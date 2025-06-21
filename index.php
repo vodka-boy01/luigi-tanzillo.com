@@ -20,7 +20,8 @@ if ($loggedIn) {
 
 /*Pagine amministrative*/
 $page = $_GET['page'] ?? 'home';
-if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
+
+if($page === 'mysqlInfinity' && $loggedIn && $authorized) {
     header('Location: https://php-myadmin.net/db_structure.php?db=if0_38885359_luigi_tanzillo');
     exit;
 }if($page === 'mysqlLocal' && $loggedIn && $authorized) {
@@ -71,26 +72,26 @@ if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
                 case 'profilo':
                     echo '<div id="page-title"><h1>profilo</h1></div>';
                     include 'pages/profile.php';
-                    break;
+                break;
 
                 case 'about':
                     echo '<div id="page-title"><h1>about</h1></div>';
                     include 'pages/about.php';
-                    break;
+                break;
 
                 case 'progetti':
                 case 'eventi':
                     include 'pages/projects.php';
-                    break;
+                break;
 
                 case 'contatti':
                     echo '<div id="page-title"><h1>contatti</h1></div>';
                     include 'pages/contacts.php';
-                    break;
+                break;
 
                 case 'progetto':
                     include 'pages/project_selective.php';
-                    break;
+                break;
 
                 case 'home':
                 default:
@@ -101,7 +102,9 @@ if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
     </main>
 
     <!-- Footer -->
-    <?php include 'includes/footer.php'; ?>
+    <?php 
+        include 'includes/footer.php'; 
+    ?>
 
     <script src="https://kit.fontawesome.com/4383a54113.js" crossorigin="anonymous"></script>
 </body>
