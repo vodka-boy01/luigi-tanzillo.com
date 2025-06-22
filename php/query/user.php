@@ -19,6 +19,18 @@ class user{
     }
 
     /**
+     * Verifica la password dell'utente 
+     * @param string $username username dell'utente
+     * @param string $password password da verificare
+     * @return bool true se la password è corretta, false altrimenti
+     */
+    public function verifyCurrentPassword($username, $password) {
+        $resSet = $this->connection->query("SELECT id FROM utenti WHERE username = '$username' AND password = '$password'");
+
+        return $resSet->num_rows > 0;
+    }
+
+    /**
      * verifica se un utente con il nome utente fornito esiste nel database
      * 
      * @param string $username nome utente da cercare
@@ -83,11 +95,50 @@ class user{
     }
 
     /**
+     * Aggiorna profilo utente
+     * @param string $currentUsername username attuale
+     * @param string $newName nuovo nome
+     * @param string $newSurname nuovo cognome
+     * @param string $newUsername nuovo username
+     * @param string $newEmail nuova email
+     * @return bool true se l'aggiornamento è riuscito, false altrimenti
+     */
+    public function updateProfile($currentUsername, $newName, $newSurname, $newUsername, $newEmail) {
+        $query = "UPDATE utenti SET 
+                    name = '$newName', 
+                    surname = '$newSurname', 
+                    username = '$newUsername', 
+                    email = '$newEmail' 
+                WHERE username = '$currentUsername'";
+        
+        $resSet = $this->connection->query($query);
+        return $resSet;
+    }
+
+    /**
+     * Aggiorna solo i campi specificati del profilo utente
+     * @param string $currentUsername username attuale
+     * @param array $fieldsToUpdate array di stringhe nel formato "campo = 'valore'"
+     * @return bool true se l'aggiornamento è riuscito, false altrimenti
+     */
+    public function updateSpecificFields($username, $fieldsToUpdate) {
+        if (empty($fieldsToUpdate)) {
+            return false;
+        }
+        
+        $setClause = implode(", ", $fieldsToUpdate);
+        $query = "UPDATE utenti SET $setClause WHERE username = '$username'";
+        
+        $resSet = $this->connection->query($query);
+        return $resSet;
+    }
+
+    /**
      * elimina un utente
      * @param string $username username dell'utente da eliminare
      * @return bool true on success, false on failure
      */
-    public function delete($username){
+    public function deleteUser($username){
         $query = "DELETE FROM utenti WHERE username = '$username'";
         $resSet = $this->connection->query($query);
 

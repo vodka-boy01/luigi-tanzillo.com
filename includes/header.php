@@ -39,36 +39,22 @@
 					<?php if($loggedIn): ?>
 					<div class="dropdown">
 						<h1 class="dropdown-button">
-							<?php echo htmlspecialchars($_SESSION['ruolo']). ' ' . htmlspecialchars($_SESSION['nome']); ?>
+							<?php echo htmlspecialchars($_SESSION['ruolo']) . ' ' . htmlspecialchars($_SESSION['nome']); ?>
+							<i class="fa fa-arrow-down dropdown-arrow"></i>
 						</h1>
+
 						<div class="dropdown-content">
-							<a href="index.php?page=profilo" title="Visualizza il tuo profilo">
-								<i class="fas fa-user"></i> Visualizza profilo
-							</a>
+							<a href="index.php?page=profilo" title="Visualizza il tuo profilo"><i class="fas fa-user"></i> Account</a>
 							<?php if ($loggedIn && $authorized): ?>
-								<!--
-								<a href="index.php?page=mysqlInfinity">
-									<i class="fas fa-database"></i> PhpMyAdmin infinity
-								</a>
-								<a href="index.php?page=mysqlLocal">
-									<i class="fas fa-hdd"></i> PhpMyAdmin locale
-								</a>
-								-->
-								<a href="index.php?page=phpInfo">
-									<i class="fas fa-info-circle"></i> Php info
-								</a>
-								<a href="index.php?page=debug">
-									<i class="fas fa-info-circle"></i> debug
-								</a>
-								<a href="index.php?page=dashboard">
-									<i class="fas fa-tachometer-alt"></i> Dashboard
-								</a>
+								<a href="index.php?page=phpInfo" title="Info server"><i class="fas fa-info-circle"></i> Php info</a>
+								<a href="index.php?page=debug" title="Pagina di debug"><i class="fas fa-info-circle"></i> Debug</a>
+								<a href="index.php?page=dashboard" title="Gestisci i contenuti del sito"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
 							<?php endif; ?>
-							<a href="includes/logout.php">
-								<i class="fas fa-sign-out-alt"></i> Logout
-							</a>
+							<a href="includes/logout.php" title="Termna sessione">
+							<i class="fas fa-sign-out-alt" title="Termina sessione"></i> Logout</a>
 						</div>
 					</div>
+
 					<a href="index.php?page=profilo" id="login-icon" class="fa-solid fa-circle-user" title="Visualizza il tuo profilo"></a>
 					<?php endif; ?>	
 				</div>

@@ -36,6 +36,11 @@ if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
     header('Location: php/views/dashboard.php');
     exit;
 }
+/*Altre pagine*/
+if ($page === 'modifica?profilo' && $loggedIn) {
+    header('Location: pages/modifica_profilo.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -43,8 +48,13 @@ if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/colors-purple.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="stylesheet" href="assets/css/about.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+    
     <script src="assets/js/script.js"></script>
     <title>Portfolio Tanzillo</title>
 </head>
@@ -91,7 +101,11 @@ if ($page === 'mysqlInfinity' && $loggedIn && $authorized) {
                 case 'progetto':
                     include 'pages/project_selective.php';
                     break;
-
+                /*
+                case 'modifica?profilo':
+                    include 'pages/modifica_profilo.php';
+                    break;
+                */
                 case 'home':
                 default:
                     include 'pages/home.php';

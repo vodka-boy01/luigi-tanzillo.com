@@ -1,0 +1,258 @@
+.profile-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px;
+  background: var(--bg-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-light);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-bg-main);
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: var(--color-1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+
+.profile-info h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-main);
+  margin: 0 0 8px 0;
+}
+
+.profile-username {
+  font-size: 18px;
+  color: var(--color-main);
+  margin: 0 0 12px 0;
+}
+
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: #dcfce7; 
+  color: var(--color-1);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-1);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.profile-cards {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 60px;
+  margin-bottom: 32px;
+}
+
+.profile-card {
+  background: var(--color-bg-main);
+  border-radius: 12px;
+  padding: 24px;
+  transition: 0.2s ease;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.card-icon.blue {
+  background: #dbeafe;
+  color: var(--color-2);
+}
+
+.card-icon.green {
+  background: #dcfce7;
+  color: var(--color-1);
+}
+
+.card-icon.purple {
+  background: #f3e8ff; 
+  color: var(--color-2);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-main);
+  margin: 0;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-main);
+  margin-bottom: 4px;
+}
+
+.info-value {
+  color: var(--color-main);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.role-value {
+  display: flex;
+  align-items: center;
+}
+
+.role-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-1);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.edit-button {
+  width: 100%;
+  background: var(--color-2);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 16px;
+}
+
+.edit-button:hover {
+  background: #5b4cd6; 
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-bg-main);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-decoration: none;
+  color: white;
+}
+
+.action-btn i {
+  margin-right: 8px;
+}
+
+.action-btn.blue {
+  background: var(--color-2);
+}
+
+.action-btn.blue:hover {
+  background: #5b4cd6;
+}
+
+.action-btn.green {
+  background: var(--color-1);
+}
+
+.action-btn.green:hover {
+  background: #169a62;
+}
+
+.action-btn.gray {
+  background: var(--color-bg-main);
+}
+
+.action-btn.gray:hover {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.action-btn.red {
+  background: var(--color-error);
+  transition: background-color 0.5s ease;
+}
+
+.action-btn.red:hover {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .profile-section {
+    margin: 20px;
+    padding: 20px;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .profile-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
+}

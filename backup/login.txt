@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Profilo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --color-main: #2d3748;
+            --color-1: #10b981;
+            --color-2: #6366f1;
+            --bg-color: #ffffff;
+            --color-bg-main: #f7fafc;
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --main-color: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg-main);
+            color: var(--color-main);
+            line-height: 1.6;
+        }
+
+        .edit-profile-section {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--color-bg-main);
+        }
+
+        .back-button {
+            background: var(--color-bg-main);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 16px;
+            color: var(--color-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background: #e2e8f0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-main);
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: var(--color-1);
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.info {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border: 1px solid #93c5fd;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-main);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg-color);
+            color: var(--color-main);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-2);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .password-section {
+            background: var(--color-bg-main);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .password-section h3 {
+            color: var(--color-main);
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        .password-note {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #fef3c7;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            padding-top: 24px;
+            border-top: 1px solid var(--color-bg-main);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--color-2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5b4cd6;
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-main);
+            color: var(--color-main);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .edit-profile-section {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-profile-section">
+        <div class="page-header">
+            <a href="profile.php" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="page-title">Modifica Profilo</h1>
+        </div>
+
+        <?php if ($message): ?>
+            <div class="message <?= $messageType ?>">
+                <?= $message ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="name">Nome</label>
+                    <input type="text" 
+                           id="name" 
+                           name="name" 
+                           class="form-input" 
+                           value="<?= htmlspecialchars($userInfo['name']) ?>" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="surname">Cognome</label>
+                    <input type="text" 
+                           id="surname" 
+                           name="surname" 
+                           class="form-input" 
+                           value="<?= htmlspecialchars($userInfo['surname']) ?>" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" 
+                           id="username" 
+                           name="username" 
+                           class="form-input" 
+                           value="<?= htmlspecialchars($userInfo['username']) ?>" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" 
+                           id="email" 
+                           name="email" 
+                           class="form-input" 
+                           value="<?= htmlspecialchars($userInfo['email']) ?>" 
+                           required>
+                </div>
+            </div>
+
+            <div class="password-section">
+                <h3><i class="fas fa-lock"></i> Conferma Modifiche</h3>
+                <div class="password-note">
+                    <i class="fas fa-info-circle"></i>
+                    Per sicurezza, inserisci la tua password attuale per confermare le modifiche.
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="current_password">Password Attuale</label>
+                    <input type="password" 
+                           id="current_password" 
+                           name="current_password" 
+                           class="form-input" 
+                           placeholder="Inserisci la password attuale"
+                           required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="profile.php" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Annulla
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salva Modifiche
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Conferma prima di lasciare la pagina se ci sono modifiche non salvate
+        let formChanged = false;
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input');
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                formChanged = true;
+            });
+        });
+        
+        window.addEventListener('beforeunload', (e) => {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        form.addEventListener('submit', () => {
+            formChanged = false;
+        });
+    </script>
+</body>
+</html>
