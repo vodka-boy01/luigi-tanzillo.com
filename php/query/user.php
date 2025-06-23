@@ -24,7 +24,7 @@ class user{
      * @param string $password password da verificare
      * @return bool true se la password è corretta, false altrimenti
      */
-    public function verifyCurrentPassword($username, $password) {
+    public function verifyPassword($username, $password) {
         $resSet = $this->connection->query("SELECT id FROM utenti WHERE username = '$username' AND password = '$password'");
 
         return $resSet->num_rows > 0;
@@ -84,9 +84,9 @@ class user{
      * @param string $new_email email dell'utente
      * @param string $new_password password dell'utente
      */
-    public function register($new_name, $new_surname, $new_username, $new_email, $new_password) {
-        $query = "INSERT INTO utenti (name, surname, username, email, password) 
-            VALUES ('$new_name', '$new_surname', '$new_username', '$new_email', '$new_password')
+    public function register($new_name, $new_surname, $new_username, $new_email, $new_password, $new_avatar) {
+        $query = "INSERT INTO utenti (name, surname, username, email, password, avatar) 
+            VALUES ('$new_name', '$new_surname', '$new_username', '$new_email', '$new_password', '$new_avatar')
         ";
 
         $resSet = $this->connection->query($query);
@@ -134,15 +134,43 @@ class user{
     }
 
     /**
-     * elimina un utente
+     * elimina un utente e il suo avatar dal filesystem
      * @param string $username username dell'utente da eliminare
      * @return bool true on success, false on failure
      */
     public function deleteUser($username){
-        $query = "DELETE FROM utenti WHERE username = '$username'";
-        $resSet = $this->connection->query($query);
-
-        return $resSet;
+        // Prima recupera il path dell'avatar prima di eliminare l'utente
+        $avatarQuery = "SELECT avatar FROM utenti WHERE username = '$username'";
+        $avatarResult = $this->connection->query($avatarQuery);
+        
+        $avatarPath = null;
+        if($avatarResult && $avatarResult->num_rows > 0) {
+            $row = $avatarResult->fetch_assoc();
+            $avatarPath = $row['avatar'];
+        }
+        
+        // Elimina l'utente dal database
+        $deleteQuery = "DELETE FROM utenti WHERE username = '$username'";
+        $deleteResult = $this->connection->query($deleteQuery);
+        
+        // Se l'eliminazione dal database è riuscita
+        if($deleteResult) {
+            // Rimuovi l'avatar dal filesystem se esiste
+            if($avatarPath !== null && $avatarPath !== '' && $avatarPath !== 'null') {
+                $fullAvatarPath = __DIR__ . "/../../" . $avatarPath;
+                
+                // Verifica che il file esista e rimuovilo
+                if(file_exists($fullAvatarPath)) {
+                    if(!unlink($fullAvatarPath)) {
+                        error_log("Impossibile eliminare l'avatar: " . $fullAvatarPath);
+                    }
+                }
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
 
     /**

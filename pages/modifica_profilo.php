@@ -15,26 +15,29 @@ if(!isset($_SESSION['username'])){
     exit();
 }
 
+
 $userInfo = $userOperations->getUserInfo($_SESSION['username']);
 $message = '';
 $messageType = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currentPassword = $_POST['current_password'];
     $errors = [];
 
-    if (empty($currentPassword)) {
+    if(empty($currentPassword)) {
         $errors[] = "La password attuale è obbligatoria";
-    } elseif (!$userOperations->verifyCurrentPassword($_SESSION['username'], $currentPassword)) {
+        
+    }elseif(!$userOperations->verifyPassword($_SESSION['username'], $currentPassword)) {
         $errors[] = "Password attuale non corretta";
+
     }
 
-    if (empty($errors)) {
+    if(empty($errors)) {
         $fieldsToUpdate = [];
         $changedFields = [];
 
         $fields = ['name', 'surname', 'username', 'email'];
-        foreach ($fields as $field) {
+        foreach($fields as $field) {
             if (isset($_POST[$field]) && !empty(trim($_POST[$field]))) {
                 $newValue = trim($_POST[$field]);
 
@@ -63,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        if (!empty($errors)) {
+        if(!empty($errors)) {
             $message = implode("<br>", $errors);
             $messageType = "error";
 
@@ -88,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $messageType = "error";
             }
         }
-    } else {
+    }else{
         $message = implode("<br>", $errors);
         $messageType = "error";
     }

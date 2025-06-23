@@ -11,16 +11,21 @@
 </style>
 
 <?php 
-	//utente loggato?
-	$loggedIn = isset($_SESSION['username']);
+//utente loggato?
+$conn = (new database())->connect();
+$loggedIn = isset($_SESSION['username']);
+$userOperations = new user($conn);
 
-	//utente autorizzato per l'accesso alla pagina cpanel?
-	if($loggedIn){
-		$ruoloId = intval($_SESSION['ruoloId']);
+//utente autorizzato per l'accesso alla pagina cpanel?
+if ($loggedIn) {
+	$ruoloId = intval($_SESSION['ruoloId']);
 
-		//livello di autorizzazione richiesto
-		$authorized = $ruoloId <= MINIMUM_REQUIRED_AUTHORIZATION_LEVEL;	
-    }
+	//livello di autorizzazione richiesto
+	$authorized = $ruoloId <= MINIMUM_REQUIRED_AUTHORIZATION_LEVEL;
+
+	//prendi i dati dell'utente
+	$userInfo = $userOperations->getUserInfo($_SESSION['username']);
+}
 ?>
 
 <header>
@@ -44,7 +49,7 @@
 					<div class="dropdown">
 						<h1 class="dropdown-button">
 							<?php echo htmlspecialchars($_SESSION['ruolo']) . ' ' . htmlspecialchars($_SESSION['nome']); ?>
-							<i class="fa fa-arrow-down dropdown-arrow"></i>
+							<i class="fa-solid fa-angle-down dropdown-arrow"></i>
 						</h1>
 
 						<div class="dropdown-content">
@@ -59,8 +64,18 @@
 							</a>
 						</div>
 					</div>
-
-                    <a href="index.php?page=profilo" id="login-icon" class="fa-solid fa-circle-user" title="Visualizza il tuo profilo"></a>
+				<!-- Avatar: solo se l'utente è autenticato -->
+				<?php if ($loggedIn): ?>
+					<div class="profile-avatar" style="width: 40px; height: 40px;">
+						<?php if($userInfo['avatar'] === null): ?>
+							<i class="fas fa-user"></i>
+						<?php else: ?>
+                            <a href="index.php?page=profilo" style="cursor: pointer" title="Visualizza il tuo profilo">
+							    <img src="<?php echo $userInfo['avatar']; ?>" alt="img">
+                            </a>
+						<?php endif ?>
+					</div>
+				<?php endif; ?>
                 <?php endif; ?>
             </div>
 

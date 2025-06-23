@@ -13,6 +13,7 @@
 
 
   $action = $_POST['action'] ?? '';
+  $deleteAccount = $_GET['action'] ?? '';
 
   if($action === "modifica"){
     header("Location: index.php?page=modifica?profilo");
@@ -24,18 +25,18 @@
   }if ($action === "elimina") {
     print_r($_SESSION);
     echo '<script>
-        if (confirm("Sei sicuro di eliminare definitivamente il profilo? Ogni informazione, file, contenuto esclusivo verrà cancellato definitivamente. Questa azione è irreversibile.")) {
-          window.location.href = "?action=conferma_elimina";
-        } else {
-          window.location.href = "index.php?page=profilo";
-        }
+      if (confirm("Sei sicuro di eliminare definitivamente il profilo? Ogni informazione, file, contenuto esclusivo verrà cancellato definitivamente. Questa azione è irreversibile.")) {
+        window.location.href = "index.php?page=profilo&action=conferma_elimina";
+      } else {
+        window.location.href = "index.php?page=profilo";
+      }
     </script>';
   }
 
-  if ($action === "conferma_elimina" && isset($_SESSION['username'])) {
+  if ($deleteAccount === "conferma_elimina" && isset($_SESSION['username'])) {
     $userOperations->deleteUser($_SESSION['username']);
     session_destroy();
-    header("Location: pages/home.php");
+    header("Location: index.php");
     exit();
   }
 
@@ -44,9 +45,16 @@
 <section class="profile-section">
   <!-- Profile Header -->
   <div class="profile-header">
-    <div class="profile-avatar">
-      <i class="fas fa-user"></i>
+    <!-- Avatar -->
+    <div class="profile-avatar" style="width: 110px; height: 110px;">
+      <?php if($userInfo['avatar'] === null): ?>
+        <i class="fas fa-user"></i>
+      <?php else: ?>
+       <img src="<?php echo $userInfo['avatar']; ?>" alt="img">
+      <?php endif ?>
+          
     </div>
+
     <div class="profile-info">
       <h2><?= htmlspecialchars($userInfo['name'] . ' ' . $userInfo['surname']) ?></h2>
       <p class="profile-username">@<?= htmlspecialchars($userInfo['username']) ?></p>

@@ -1,21 +1,23 @@
 // Impostando subito il tema pagina sul tag html e non body si evita il flickering per il caricamento della pagina
-(function() {
-    const tema = localStorage.getItem("tema");
-    if (tema === "true") {
-        document.documentElement.classList.add("dark-theme");
-    }
+(function () {
+  const tema = localStorage.getItem("tema");
+  if (tema === "true") {
+    document.documentElement.classList.add("dark-theme");
+  }
 })();
 
-window.addEventListener('load', function() {
-    const loadingScreen = document.querySelector('.loading-screen');
-    if (loadingScreen) {
-        loadingScreen.classList.add('fade-out');
-    }
-    
-    const spinnerStop = document.querySelector('.spinner');
-    if (spinnerStop) {
-        spinnerStop.classList.add('stop');
-    }
+window.addEventListener('load', function () {
+  const loadingScreen = document.querySelector('.loading-screen');
+  const spinnerStop = document.querySelector('.spinner');
+  
+  if (loadingScreen) {
+    loadingScreen.classList.add('fade-out');
+  }
+
+  if (spinnerStop) {
+    spinnerStop.classList.add('stop');
+  }
+  
 });
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,18 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const initPage = () => {
-  if(window.location.pathname.endsWith("index.php")) {
+  if (window.location.pathname.endsWith("index.php")) {
     searchModule.init();
   }
 
   let tema = localStorage.getItem("tema");
 
-  if(tema === null) {
+  if (tema === null) {
     tema = "false";
     localStorage.setItem("tema", tema);
   }
 
-  if(tema === "false") {
+  if (tema === "false") {
     document.documentElement.classList.remove("dark-theme");
   }
 
@@ -43,20 +45,20 @@ const initPage = () => {
   const projectImageContainers = document.querySelectorAll('.project-card');
 
   projectImageContainers.forEach(projectCard => {
-      const mainImage = projectCard.querySelector('.main-project-image');
-      const thumbnails = projectCard.querySelectorAll('.thumbnail-image');
+    const mainImage = projectCard.querySelector('.main-project-image');
+    const thumbnails = projectCard.querySelectorAll('.thumbnail-image');
 
-      if (mainImage && thumbnails.length > 0) {
-        thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener('click', function() {
-              thumbnails.forEach(t => t.classList.remove('active-thumbnail'));
+    if (mainImage && thumbnails.length > 0) {
+      thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', function () {
+          thumbnails.forEach(t => t.classList.remove('active-thumbnail'));
 
-              this.classList.add('active-thumbnail');
+          this.classList.add('active-thumbnail');
 
-              mainImage.src = this.src;
-            });
+          mainImage.src = this.src;
         });
-      }
+      });
+    }
   });
 
   const sliderContainer = document.querySelector('.slider-container');
@@ -113,37 +115,37 @@ const initPage = () => {
   nextButton.addEventListener('mouseenter', stopAutoScroll);
   prevButton.addEventListener('mouseleave', startAutoScroll);
   nextButton.addEventListener('mouseleave', startAutoScroll);
-  
+
 };
 
 const searchModule = {
-  init: function() {
+  init: function () {
     const searchInput = document.getElementById('search-input');
     const clearButton = document.getElementById('reset-button');
 
     if (searchInput) {
-        searchInput.addEventListener('focus', function() {
-            if (this.value === 'Ricerca') {
-                this.value = '';
-            }
-        });
+      searchInput.addEventListener('focus', function () {
+        if (this.value === 'Ricerca') {
+          this.value = '';
+        }
+      });
 
-        searchInput.addEventListener('blur', function() {
-            if (this.value === '') {
-                this.value = 'Ricerca';
-            }
-        });
+      searchInput.addEventListener('blur', function () {
+        if (this.value === '') {
+          this.value = 'Ricerca';
+        }
+      });
     }
 
     if (clearButton && searchInput) {
-        clearButton.addEventListener('click', function(){
-            searchInput.value = '';
-        });
+      clearButton.addEventListener('click', function () {
+        searchInput.value = '';
+      });
     }
   }
 }
 
-function clearSearch(){
+function clearSearch() {
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     searchInput.value = '';

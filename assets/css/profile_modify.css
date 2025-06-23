@@ -33,6 +33,12 @@ body, input, select, textarea {
     line-height: 1.75em;
 }
 
+input:hover{
+  opacity: var(--opacity-value);
+  border-color: var(--color-hover);
+  cursor: pointer;
+}
+
 .container-colorChange{
     display: flex;
     align-items: center;
@@ -60,8 +66,9 @@ body, input, select, textarea {
     max-width: 800px;
     margin: 40px auto;
     padding: 40px;
-    background: var(--bg-color, #f9f9f9);
+    background: var(--bg-color);
     border-radius: 16px;
+    box-shadow: 10px 10px 10px var(--main-color);
 }
 
 .page-header {
