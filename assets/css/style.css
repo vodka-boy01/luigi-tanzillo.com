@@ -188,6 +188,8 @@ main{
     background-color: var(--color-bg-main);
     color: var(--color-main);
     transition: 0.5s ease;
+    padding-bottom: 20px;
+    padding-bottom: 20px;
 }
 
 /*banner rules*/
