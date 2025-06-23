@@ -4,7 +4,7 @@
  * autenticazione, verifica esistenza, registrazione ed eliminazione
  * 
  * @author luigi tanzillo
- * @version 1.1
+ * @version 1.2
 */
 class user{
     private $connection;
@@ -119,9 +119,10 @@ class user{
      * Aggiorna solo i campi specificati del profilo utente
      * @param string $currentUsername username attuale
      * @param array $fieldsToUpdate array di stringhe nel formato "campo = 'valore'"
+     * @param string|null $oldAvatarPath path del vecchio avatar da rimuovere (opzionale)
      * @return bool true se l'aggiornamento è riuscito, false altrimenti
      */
-    public function updateSpecificFields($username, $fieldsToUpdate) {
+    public function updateSpecificFields($username, $fieldsToUpdate, $oldAvatarPath = null) {
         if (empty($fieldsToUpdate)) {
             return false;
         }
@@ -130,7 +131,55 @@ class user{
         $query = "UPDATE utenti SET $setClause WHERE username = '$username'";
         
         $resSet = $this->connection->query($query);
+        
+        // Se l'aggiornamento è riuscito e c'è un vecchio avatar da rimuovere
+        if($resSet && $oldAvatarPath !== null && !empty($oldAvatarPath) && $oldAvatarPath !== 'null') {
+            $this->removeAvatarFile($oldAvatarPath);
+        }
+        
         return $resSet;
+    }
+
+    /**    
+     * Trova utente per Google ID
+     * @param string $googleId Google ID
+     * @return array|null dati utente o null se non trovato
+     */
+    public function findByGoogleId($googleId) {
+        $googleId = $this->connection->real_escape_string($googleId);
+        $sql = "SELECT * FROM utenti WHERE google_id = '$googleId'";
+        $resSet = $this->connection->query($sql);
+
+        if ($resSet && $resSet->num_rows > 0) {
+            return $resSet->fetch_assoc();
+        }
+
+        return null;
+    }
+
+    /**
+     * Rimuove un file avatar dal filesystem
+     * @param string $avatarPath path dell'avatar da rimuovere
+     * @return bool true se rimosso con successo o se il file non esisteva, false in caso di errore
+     */
+    private function removeAvatarFile($avatarPath) {
+        if(empty($avatarPath) || $avatarPath === 'null') {
+            return true;
+        }
+        
+        $fullAvatarPath = __DIR__ . "/../../" . $avatarPath;
+        
+        // Verifica che il file esista e rimuovilo
+        if(file_exists($fullAvatarPath)) {
+            if(unlink($fullAvatarPath)) {
+                return true;
+            } else {
+                error_log("Impossibile eliminare l'avatar: " . $fullAvatarPath);
+                return false;
+            }
+        }
+        
+        return true; // File non esisteva, considerato successo
     }
 
     /**
@@ -157,14 +206,7 @@ class user{
         if($deleteResult) {
             // Rimuovi l'avatar dal filesystem se esiste
             if($avatarPath !== null && $avatarPath !== '' && $avatarPath !== 'null') {
-                $fullAvatarPath = __DIR__ . "/../../" . $avatarPath;
-                
-                // Verifica che il file esista e rimuovilo
-                if(file_exists($fullAvatarPath)) {
-                    if(!unlink($fullAvatarPath)) {
-                        error_log("Impossibile eliminare l'avatar: " . $fullAvatarPath);
-                    }
-                }
+                $this->removeAvatarFile($avatarPath);
             }
             
             return true;
@@ -253,6 +295,70 @@ class user{
         }
 
         return $users;
+    }
+
+    /**
+     * Valida un file avatar
+     * @param array $file array $_FILES per il file caricato
+     */
+    public function validateAvatar($file) {
+        $errors = [];
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+        
+        if($file['error'] !== UPLOAD_ERR_OK) {
+            $errors[] = "Errore durante il caricamento del file";
+            return ['valid' => false, 'errors' => $errors];
+        }
+        
+        if(!in_array($file['type'], $allowedTypes)) {
+            $errors[] = "Formato non supportato. Usa JPG, JPEG, PNG, GIF o WEBP";
+        }
+        
+        if($file['size'] > $maxSize) {
+            $errors[] = "Il file non può superare i 2MB";
+        }
+        
+        // Verifica aggiuntiva del tipo di file usando getimagesize
+        $imageInfo = getimagesize($file['tmp_name']);
+        if($imageInfo === false) {
+            $errors[] = "Il file non è un'immagine valida";
+        }
+        
+        return ['valid' => empty($errors), 'errors' => $errors];
+    }
+
+    /**
+     * Carica un avatar nel filesystem
+     * @param array $file array $_FILES per il file caricato
+     * @param string $username username dell'utente
+     * @return array array con 'success' (bool), 'path' (string) e 'error' (string)
+     */
+    public function uploadAvatar($file, $username) {
+        $validation = $this->validateAvatar($file);
+        
+        if(!$validation['valid']) {
+            return ['success' => false, 'error' => implode(', ', $validation['errors'])];
+        }
+        
+        $uploadDir = __DIR__ . '/../assets/uploads/avatars';
+        if(!is_dir($uploadDir)) {
+            if(!mkdir($uploadDir, 0755, true)) {
+                return ['success' => false, 'error' => 'Impossibile creare la directory per gli avatar'];
+            }
+        }
+        
+        // nome file unico
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = $username . '_' . time() . '.' . $extension;
+        $uploadPath = $uploadDir . $filename;
+        $dbPath = 'assets/uploads/avatars/' . $filename;
+        
+        if(move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            return ['success' => true, 'path' => $dbPath];
+        } else {
+            return ['success' => false, 'error' => 'Errore durante il salvataggio del file'];
+        }
     }
 }
 ?>

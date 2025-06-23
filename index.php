@@ -40,7 +40,10 @@ if ($page === 'dashboard' && $loggedIn && $authorized) {
     header('Location: php/views/dashboard.php');
     exit;
 }
-
+if ($page === 'firebase' && $loggedIn && $authorized) {
+    header('Location: https://console.firebase.google.com/u/0/project/primo-progetto-7f9e7/authentication/users');
+    exit;
+}
 /*Altre pagine*/
 if ($page === 'modifica?profilo' && $loggedIn) {
     header('Location: pages/modifica_profilo.php');

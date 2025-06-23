@@ -34,6 +34,7 @@
       $_SESSION['nome'] = $userInfo['name'];
       $_SESSION['ruoloId'] = $userInfo['ruolo'];
       $_SESSION['ruolo'] = $userOperations->getUserRole($username);
+      $_SESSION['google_login'] = 0;
 
       $conn->close();
       

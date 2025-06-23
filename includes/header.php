@@ -55,6 +55,9 @@ if ($loggedIn) {
 								<a href="index.php?page=debug" title="Pagina di debug">
 									<i class="fas fa-bug"></i> Debug
 								</a>
+								<a href="index.php?page=firebase" title="Gestisci i contenuti del sito">
+									<i class="fas fa-fire"></i> Firebase
+								</a>
 								<a href="index.php?page=dashboard" title="Gestisci i contenuti del sito">
 									<i class="fas fa-tachometer-alt"></i> Dashboard
 								</a>

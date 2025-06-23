@@ -14,6 +14,7 @@
   if(isset($_POST['invia'])){
     require_once "../php/query/database.php";
     require_once "../php/query/user.php";
+    require_once "../php/protected/minimum_authorization_level.php";
 
     session_start();
 
@@ -35,6 +36,11 @@
     $email = $_POST['new_email'];
     $password = $_POST['new_password'];
     $avatar_path = ''; 
+
+    // Controllo lunghezza minima username
+    if(strlen($username) < USERNAME_MINIMUM_LENGHT){
+      $usernameError = "L'username deve essere di almeno 3 caratteri";
+    }
 
     //verifica esistenza username
     if($userOperations->existsInField("username", $username)){
@@ -101,7 +107,7 @@
     }
 
     //registrazione nuovo utente
-    if($usernameError == '' && $emailError == '' && $avatarError == ''){
+    if($usernameError === '' && $emailError === '' && $avatarError === ''){
       // Passa il path dell'avatar al metodo di registrazione
       if($userOperations->register($name, $surname, $username, $email, $password, $avatar_path)){
         $conn->close();

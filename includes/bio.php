@@ -17,7 +17,7 @@
         }
     </style>
     <div id="bio-tab">
-        <img src="/assets/img/luigi.JPEG" alt="Errore" id="tanzillo">
+        <img src="/assets/img/luigi.PNG" alt="Errore" id="tanzillo">
         <div class="text-box">
             <h1 id="title">Luigi Tanzillo</h1>
             <h3>

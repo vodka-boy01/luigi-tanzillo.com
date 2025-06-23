@@ -57,6 +57,7 @@ if ($loggedIn) {
 							<?php if ($loggedIn && $authorized): ?>
 								<a href="index.php?page=phpInfo" title="Info server"><i class="fas fa-info-circle"></i> Php info</a>
 								<a href="index.php?page=debug" title="Pagina di debug"><i class="fas fa-info-circle"></i> Debug</a>
+                                <a href="index.php?page=firebase" title="Gestisci i contenuti del sito"><i class="fas fa-fire"></i> Firebase</a>
 								<a href="index.php?page=dashboard" title="Gestisci i contenuti del sito"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
 							<?php endif; ?>
 							<a href="includes/logout.php" title="Termina sessione">

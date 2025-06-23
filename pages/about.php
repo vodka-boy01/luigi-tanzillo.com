@@ -19,7 +19,7 @@
         </div>
 
         <div class="about-image-right">
-            <img src="assets\img\luigi.JPEG" alt="La tua foto profilo" class="profile-card">
+            <img src="assets\img\luigi.PNG" alt="foto profilo" class="profile-card">
         </div>
     </div>    
     

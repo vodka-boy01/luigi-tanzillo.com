@@ -1,7 +1,6 @@
 // firebase-config
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 // configura Firebase
 const firebaseConfig = {
@@ -15,24 +14,142 @@ const firebaseConfig = {
   measurementId: "G-G8TVVF06LG"
 };
 
-// inizializza Firebase
+// Inizializza Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// Configurazione provider Google
+provider.addScope('email');
+provider.addScope('profile');
+
+async function handleGoogleLogin() {
+  try {
+    // Mostra loading screen e spinner
+    const loadingScreen = document.querySelector('.loading-screen');
+    const spinnerStop = document.querySelector('.spinner');
+    
+    if (loadingScreen) {
+      loadingScreen.classList.add('fade-out');
+    }
+
+    if (spinnerStop) {
+      spinnerStop.classList.add('stop');
+    }
+
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    
+    console.log("Login Google avvenuto:", user);
+    
+    // dati dell'utente per l'invio al server
+    const userData = {
+      google_id: user.uid,
+      email: user.email,
+      name: user.displayName?.split(' ')[0] || '',
+      surname: user.displayName?.split(' ').slice(1).join(' ') || '',
+      username: user.email.split('@')[0], // parte prima della @ come username
+      avatar: null,
+      provider: 'google'
+    };
+
+    // Invia i dati al server PHP
+    const response = await fetch('/php/API/google_login.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+
+    // Leggi il corpo della risposta UNA volta come testo
+    const text = await response.text();
+
+    // Prova a fare il parsing JSON
+    let serverResponse;
+    try {
+      serverResponse = JSON.parse(text);
+    } catch {
+      console.error("Risposta non JSON dal server:", text);
+      showError("Errore interno: risposta server non valida");
+      return;
+    }
+
+    if (!response.ok) {
+      console.error("Errore HTTP dal server:", response.status, text);
+      showError(`Errore dal server: ${response.status}`);
+      return;
+    }
+
+    //Gestione risposta dal server
+    if (serverResponse.success) {
+      window.location.href = serverResponse.redirect || '/index.php';
+    } else {
+      showError(serverResponse.message || 'Errore durante il login con Google');
+    }
+
+  } catch (error) {
+    console.error("Errore login Google:", error);
+    let errorMessage = 'Errore durante il login con Google';
+    
+    if (error.code === 'auth/popup-closed-by-user') {
+      errorMessage = 'Login annullato dall\'utente';
+
+    } else if (error.code === 'auth/popup-blocked') {
+      errorMessage = 'Popup bloccato dal browser. Consenti i popup per questo sito.';
+
+    }
+    
+    showError(errorMessage);
+    
+  } finally {
+    // Nascondi loading
+    const loadingScreen = document.querySelector('.loading-screen');
+    if (loadingScreen) {
+      loadingScreen.style.display = 'none';
+    }
+  }
+}
+
+
+// Event listener principale per google e apple 
 window.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("loginBtnGoogle");
+  const loginBtnGoogle = document.getElementById("loginBtnGoogle");
   
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then(result => {
-          const user = result.user;
-          console.log("Login avvenuto:", user);
-        })
-        .catch(error => {
-          console.error("Errore login:", error);
-        });
+  if (loginBtnGoogle) {
+    loginBtnGoogle.addEventListener("click", handleGoogleLogin);
+  }
+  
+  // Gestisci anche il login Apple se necessario
+  const loginBtnApple = document.getElementById("loginAppleBtn");
+  if (loginBtnApple) {
+    loginBtnApple.addEventListener("click", () => {
+      showError("Login con Apple non ancora implementato");
     });
   }
 });
+
+function showError(message) {
+  // Cerca se esiste già un container per gli errori
+  let errorContainer = document.querySelector('.google-error-message');
+  
+  if (!errorContainer) {
+    // Container per gli errori
+    errorContainer = document.createElement('div');
+    errorContainer.className = 'error_message google-error-message';
+    const form = document.getElementById('form');
+    const socialContainer = document.getElementById('social_button_container');
+    
+    if (form && socialContainer) {
+      form.parentNode.insertBefore(errorContainer, socialContainer);
+    }
+  }
+  
+  errorContainer.textContent = message;
+  errorContainer.style.display = 'block';
+  
+  // time out 6 secondi 
+  setTimeout(() => {
+    errorContainer.style.display = 'none';
+  }, 6000);
+}

@@ -122,3 +122,24 @@ INSERT INTO utenti (name, surname, username, email, password, latest_login, data
 ('Manuel', 'Grassi', 'Manny_Sports', 'manny.sports@example.com', 'Manuel#1', NULL, '2025-05-25 10:00:00', NULL, 4),
 ('Angela', 'De Angelis', 'Ange_Shine', 'ange.shine@example.com', 'AngelaPwd', '2025-06-03 14:00:00', '2025-05-27 12:00:00', NULL, 4),
 ('Leonardo', 'Gallo', 'Leo_Sketch', 'leo.sketch@example.com', 'Leonardo!', '2025-06-02 10:00:00', '2025-05-29 09:00:00', NULL, 4);
+
+--@block
+ALTER TABLE utenti ADD COLUMN google_id VARCHAR(255) NULL AFTER id;
+
+--@block
+ALTER TABLE utenti ADD INDEX idx_google_id (google_id);
+
+--@block
+ALTER TABLE utenti MODIFY COLUMN password VARCHAR(255) NULL;
+
+--@block
+ALTER TABLE utenti ADD COLUMN auth_provider ENUM('local', 'google', 'apple') DEFAULT 'local' AFTER google_id;
+
+--@block
+DESCRIBE utenti;
+
+--@block
+SELECT id, username, email, google_id, auth_provider, latest_login 
+FROM utenti 
+WHERE auth_provider = 'google' 
+ORDER BY latest_login DESC;
