@@ -342,7 +342,7 @@ class Project {
             // 1. Recupera i percorsi delle immagini PRIMA di eliminare il progetto dal DB
             $images_path = $this->getProjectImageFullPaths($project_id);
 
-            // 2. Elimina il progetto dal database cascade
+            // 2. Elimina il progetto dal database con cascade
             $query = "DELETE FROM progetti WHERE id = ?";
             $resSet = $this->connection->prepare($query);
             
