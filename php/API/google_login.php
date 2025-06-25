@@ -6,12 +6,17 @@ require_once __DIR__ . "/../query/database.php";
 require_once __DIR__ . "/../query/user.php";
 require_once __DIR__ . "/../protected/minimum_authorization_level.php";
 
+// ricezione
 $input = file_get_contents('php://input');
+//decodifica json in array associativo php
 $userData = json_decode($input, true);
 
 if (!$userData || empty($userData['google_id']) || empty($userData['email'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Dati non validi']);
+    echo json_encode(['
+        success' => false,
+        'message' => 'Dati non validi'
+    ]);
     exit;
 }
 
@@ -61,7 +66,7 @@ try {
     if (isset($conn)) $conn->close();
     error_log("Errore Google Login: " . $e->getMessage());
 
-    http_response_code(500);
+    http_response_code(500);//internal error
     echo json_encode([
         'success' => false,
         'message' => 'Errore interno del server durante il login: ' . $e->getMessage()

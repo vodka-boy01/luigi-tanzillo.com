@@ -1,8 +1,7 @@
-// firebase-config
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// configura Firebase
+// API key
 const firebaseConfig = {
   apiKey: "AIzaSyBvAV1Id3SNM9S1kKYfwEM4dq--sMiioIo",
   authDomain: "primo-progetto-7f9e7.firebaseapp.com",
@@ -25,7 +24,6 @@ provider.addScope('profile');
 
 async function handleGoogleLogin() {
   try {
-    // Mostra loading screen e spinner
     const loadingScreen = document.querySelector('.loading-screen');
     const spinnerStop = document.querySelector('.spinner');
     
@@ -53,7 +51,7 @@ async function handleGoogleLogin() {
       provider: 'google'
     };
 
-    // Invia i dati al server PHP
+    // invio dati
     const response = await fetch('/php/API/google_login.php', {
       method: 'POST',
       headers: {
@@ -62,10 +60,10 @@ async function handleGoogleLogin() {
       body: JSON.stringify(userData)
     });
 
-    // Leggi il corpo della risposta UNA volta come testo
+    // conversione in txt
     const text = await response.text();
 
-    // Prova a fare il parsing JSON
+    // parsing JSON
     let serverResponse;
     try {
       serverResponse = JSON.parse(text);
@@ -81,7 +79,7 @@ async function handleGoogleLogin() {
       return;
     }
 
-    //Gestione risposta dal server
+    // risposta dal server
     if (serverResponse.success) {
       window.location.href = serverResponse.redirect || '/index.php';
     } else {
@@ -103,7 +101,6 @@ async function handleGoogleLogin() {
     showError(errorMessage);
     
   } finally {
-    // Nascondi loading
     const loadingScreen = document.querySelector('.loading-screen');
     if (loadingScreen) {
       loadingScreen.style.display = 'none';
@@ -120,21 +117,20 @@ window.addEventListener("DOMContentLoaded", () => {
     loginBtnGoogle.addEventListener("click", handleGoogleLogin);
   }
   
-  // Gestisci anche il login Apple se necessario
+  // login apple non attivo
   const loginBtnApple = document.getElementById("loginAppleBtn");
   if (loginBtnApple) {
     loginBtnApple.addEventListener("click", () => {
-      showError("Login con Apple non ancora implementato");
+      showError("Login con Apple al momento non disponibile");
     });
   }
 });
 
 function showError(message) {
-  // Cerca se esiste già un container per gli errori
   let errorContainer = document.querySelector('.google-error-message');
   
   if (!errorContainer) {
-    // Container per gli errori
+    // Cantainer per gli errori
     errorContainer = document.createElement('div');
     errorContainer.className = 'error_message google-error-message';
     const form = document.getElementById('form');
