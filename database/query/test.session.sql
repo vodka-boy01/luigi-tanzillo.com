@@ -127,9 +127,6 @@ INSERT INTO utenti (name, surname, username, email, password, latest_login, data
 ALTER TABLE utenti ADD COLUMN google_id VARCHAR(255) NULL AFTER id;
 
 --@block
-ALTER TABLE utenti ADD INDEX idx_google_id (google_id);
-
---@block
 ALTER TABLE utenti MODIFY COLUMN password VARCHAR(255) NULL;
 
 --@block

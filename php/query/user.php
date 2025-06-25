@@ -56,6 +56,7 @@ class user{
         $current_dateTime = date('Y-m-d H:i:s');
         //verifica presenza utente
         $resSet = $this->connection->query("SELECT id FROM utenti WHERE username = '$username' AND password = '$password'");
+        
         //aggiorna ultimo login query 
         $queryLatestLogin = "UPDATE utenti SET latest_login = '$current_dateTime' WHERE username = '$username' ";
 
